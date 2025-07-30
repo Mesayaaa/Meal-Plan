@@ -4,7 +4,7 @@ import * as React from 'react';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {useMealPlan} from '@/hooks/use-meal-plan.tsx';
-import type {Day, Meal, MealType, Recipe} from '@/lib/types';
+import type {Day, MealType, Recipe} from '@/lib/types';
 import {RecipeDetails} from '@/components/recipe-details';
 import {
   Dialog,
@@ -13,7 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {dummyRecipes} from '@/lib/dummy-data';
 import {PlusCircle} from 'lucide-react';
 import SuggestionsPage from '@/app/suggestions/page';
 
@@ -47,6 +46,16 @@ export default function MealCalendarPage() {
     }
   };
 
+  const openAddMealDialog = (day: Day, type: MealType) => {
+    setMealSlot({day, type});
+    setAddMealDialogOpen(true);
+  };
+
+  const closeAddMealDialog = () => {
+    setAddMealDialogOpen(false);
+    setMealSlot(null);
+  }
+
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
       <div className="mb-8 text-center">
@@ -67,6 +76,7 @@ export default function MealCalendarPage() {
             <CardContent className="flex flex-1 flex-col gap-4">
               {mealTypes.map(type => {
                 const meal = mealPlan[day][type];
+                const isCurrentSlot = mealSlot?.day === day && mealSlot?.type === type;
                 return (
                   <div key={type}>
                     <h4 className="font-semibold text-muted-foreground">
@@ -88,26 +98,14 @@ export default function MealCalendarPage() {
                         </>
                       ) : (
                         <Dialog
-                          open={
-                            addMealDialogOpen &&
-                            mealSlot?.day === day &&
-                            mealSlot?.type === type
-                          }
-                          onOpenChange={isOpen => {
-                            if (!isOpen) {
-                              setAddMealDialogOpen(false);
-                              setMealSlot(null);
-                            }
-                          }}
+                          open={addMealDialogOpen && isCurrentSlot}
+                          onOpenChange={(isOpen) => !isOpen && closeAddMealDialog()}
                         >
                           <DialogTrigger asChild>
                             <Button
                               variant="ghost"
                               className="w-full text-muted-foreground"
-                              onClick={() => {
-                                setMealSlot({day, type});
-                                setAddMealDialogOpen(true);
-                              }}
+                              onClick={() => openAddMealDialog(day, type)}
                             >
                               <PlusCircle className="mr-2 h-4 w-4" />
                               Add Meal

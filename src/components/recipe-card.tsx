@@ -46,7 +46,7 @@ const days: Day[] = [
 ];
 const mealTypes: MealType[] = ['Breakfast', 'Lunch', 'Dinner'];
 
-export function RecipeCard({recipe, onAddToPlan}: RecipeCardProps) {
+function RecipeCardComponent({recipe, onAddToPlan}: RecipeCardProps) {
   const {toast} = useToast();
   const {addMeal} = useMealPlan();
   const [detailsOpen, setDetailsOpen] = React.useState(false);
@@ -79,6 +79,14 @@ export function RecipeCard({recipe, onAddToPlan}: RecipeCardProps) {
     }
   };
 
+  const handleTriggerClick = () => {
+    if (onAddToPlan) {
+      onAddToPlan(recipe);
+    } else {
+      setAddToPlanOpen(true);
+    }
+  }
+
   return (
     <>
       <Card className="flex flex-col overflow-hidden">
@@ -87,7 +95,7 @@ export function RecipeCard({recipe, onAddToPlan}: RecipeCardProps) {
             <Image
               src={recipe.image || 'https://placehold.co/600x400.png'}
               alt={recipe.name}
-              layout="fill"
+              fill
               objectFit="cover"
               data-ai-hint="delicious meal"
             />
@@ -103,7 +111,7 @@ export function RecipeCard({recipe, onAddToPlan}: RecipeCardProps) {
 
           <Dialog open={addToPlanOpen} onOpenChange={setAddToPlanOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => (onAddToPlan ? onAddToPlan(recipe) : setAddToPlanOpen(true))}>
+              <Button onClick={handleTriggerClick}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add to Plan
               </Button>
@@ -164,3 +172,5 @@ export function RecipeCard({recipe, onAddToPlan}: RecipeCardProps) {
     </>
   );
 }
+
+export const RecipeCard = React.memo(RecipeCardComponent);

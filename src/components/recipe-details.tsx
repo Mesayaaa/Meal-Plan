@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import Image from 'next/image';
 import {
   Dialog,
@@ -16,7 +17,7 @@ interface RecipeDetailsProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function RecipeDetails({recipe, onOpenChange}: RecipeDetailsProps) {
+function RecipeDetailsComponent({recipe, onOpenChange}: RecipeDetailsProps) {
   if (!recipe) return null;
 
   return (
@@ -27,7 +28,7 @@ export function RecipeDetails({recipe, onOpenChange}: RecipeDetailsProps) {
             <Image
               src={recipe.image || 'https://placehold.co/600x400.png'}
               alt={recipe.name}
-              layout="fill"
+              fill
               objectFit="cover"
               data-ai-hint="recipe food"
             />
@@ -68,3 +69,5 @@ export function RecipeDetails({recipe, onOpenChange}: RecipeDetailsProps) {
     </Dialog>
   );
 }
+
+export const RecipeDetails = React.memo(RecipeDetailsComponent);

@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {cn} from '@/lib/utils';
@@ -12,7 +13,7 @@ const navItems = [
   {href: '/profile', label: 'Profile'},
 ];
 
-export function Header() {
+function HeaderComponent() {
   const pathname = usePathname();
 
   return (
@@ -44,3 +45,5 @@ export function Header() {
     </header>
   );
 }
+
+export const Header = React.memo(HeaderComponent);
