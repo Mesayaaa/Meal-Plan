@@ -10,15 +10,17 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: '2rem',
       screens: {
-        "2xl": "1400px",
+        '2xl': '1400px',
       },
     },
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
-        headline: ['Alegreya', 'serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'serif'],
+        body: ['var(--font-sans)'],
+        headline: ['var(--font-serif)'],
       },
       colors: {
         border: 'hsl(var(--border))',
