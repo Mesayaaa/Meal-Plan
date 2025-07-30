@@ -11,29 +11,72 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {useToast} from '@/hooks/use-toast';
-import type {Recipe} from '@/lib/types';
+import type {Day, MealType, Recipe} from '@/lib/types';
 import {RecipeDetails} from './recipe-details';
 import {Plus} from 'lucide-react';
-import {dummyRecipes} from '@/lib/dummy-data';
+import {useMealPlan} from '@/hooks/use-meal-plan.tsx';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface RecipeCardProps {
   recipe: Recipe;
+  onAddToPlan?: (recipe: Recipe) => void;
 }
 
-export function RecipeCard({recipe}: RecipeCardProps) {
+const days: Day[] = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+const mealTypes: MealType[] = ['Breakfast', 'Lunch', 'Dinner'];
+
+export function RecipeCard({recipe, onAddToPlan}: RecipeCardProps) {
   const {toast} = useToast();
+  const {addMeal} = useMealPlan();
   const [detailsOpen, setDetailsOpen] = React.useState(false);
+  const [addToPlanOpen, setAddToPlanOpen] = React.useState(false);
+  const [selectedDay, setSelectedDay] = React.useState<Day | null>(null);
+  const [selectedMealType, setSelectedMealType] = React.useState<MealType | null>(
+    null
+  );
 
   const handleAddToPlan = () => {
-    // This is a placeholder. In a real app, this would open a dialog
-    // to select a day and meal type.
-    if (!dummyRecipes.find(r => r.name === recipe.name)) {
-      dummyRecipes.push(recipe);
+    if (onAddToPlan) {
+      onAddToPlan(recipe);
+    } else {
+      if (selectedDay && selectedMealType) {
+        addMeal(selectedDay, selectedMealType, recipe);
+        toast({
+          title: 'Recipe Added to Plan',
+          description: `${recipe.name} has been added to ${selectedDay} ${selectedMealType}.`,
+        });
+        setAddToPlanOpen(false);
+        setSelectedDay(null);
+        setSelectedMealType(null);
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Please select a day and meal type.',
+        });
+      }
     }
-    toast({
-      title: 'Recipe Added',
-      description: `${recipe.name} is now available to add to your meal plan.`,
-    });
   };
 
   return (
@@ -57,10 +100,61 @@ export function RecipeCard({recipe}: RecipeCardProps) {
           <Button variant="outline" onClick={() => setDetailsOpen(true)}>
             View Recipe
           </Button>
-          <Button onClick={handleAddToPlan}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add to Library
-          </Button>
+
+          <Dialog open={addToPlanOpen} onOpenChange={setAddToPlanOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={() => (onAddToPlan ? onAddToPlan(recipe) : setAddToPlanOpen(true))}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add to Plan
+              </Button>
+            </DialogTrigger>
+            {!onAddToPlan && (
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add "{recipe.name}" to your plan</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <label>Day</label>
+                    <Select
+                      onValueChange={(value: Day) => setSelectedDay(value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a day" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {days.map(day => (
+                          <SelectItem key={day} value={day}>
+                            {day}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <label>Meal</label>
+                    <Select
+                      onValueChange={(value: MealType) =>
+                        setSelectedMealType(value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a meal time" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {mealTypes.map(type => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <Button onClick={handleAddToPlan}>Confirm</Button>
+              </DialogContent>
+            )}
+          </Dialog>
         </CardFooter>
       </Card>
       <RecipeDetails

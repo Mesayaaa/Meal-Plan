@@ -3,7 +3,7 @@
 import * as React from 'react';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {useMealPlan} from '@/hooks/use-meal-plan';
+import {useMealPlan} from '@/hooks/use-meal-plan.tsx';
 import type {Day, Meal, MealType, Recipe} from '@/lib/types';
 import {RecipeDetails} from '@/components/recipe-details';
 import {
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import {dummyRecipes} from '@/lib/dummy-data';
 import {PlusCircle} from 'lucide-react';
+import SuggestionsPage from '@/app/suggestions/page';
 
 const days: Day[] = [
   'Monday',
@@ -112,23 +113,16 @@ export default function MealCalendarPage() {
                               Add Meal
                             </Button>
                           </DialogTrigger>
-                          <DialogContent>
+                          <DialogContent className="max-w-4xl">
                             <DialogHeader>
                               <DialogTitle className="font-headline">
-                                Add a meal to {day} {type}
+                                Find a recipe for {day} {type}
                               </DialogTitle>
                             </DialogHeader>
-                            <div className="grid max-h-[60vh] grid-cols-1 gap-2 overflow-y-auto p-1">
-                              {dummyRecipes.map(recipe => (
-                                <Button
-                                  key={recipe.name}
-                                  variant="outline"
-                                  className="h-auto justify-start p-4"
-                                  onClick={() => handleAddMeal(recipe)}
-                                >
-                                  {recipe.name}
-                                </Button>
-                              ))}
+                            <div className="max-h-[80vh] overflow-y-auto p-1">
+                              <SuggestionsPage
+                                onRecipeSelect={handleAddMeal}
+                              />
                             </div>
                           </DialogContent>
                         </Dialog>

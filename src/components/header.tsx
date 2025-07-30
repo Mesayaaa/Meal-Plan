@@ -7,7 +7,7 @@ import {Leaf} from 'lucide-react';
 
 const navItems = [
   {href: '/', label: 'Meal Plan'},
-  {href: '/suggestions', label: 'Get Suggestions'},
+  {href: '/recipe-finder', label: 'Recipe Finder'},
   {href: '/grocery-list', label: 'Grocery List'},
   {href: '/profile', label: 'Profile'},
 ];
