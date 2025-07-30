@@ -36,13 +36,15 @@ function RecipeDetailsComponent({recipe, onOpenChange}: RecipeDetailsProps) {
           <DialogTitle className="font-headline mt-4 text-3xl">
             {recipe.name}
           </DialogTitle>
-          <DialogDescription className="flex flex-wrap gap-2 pt-2">
-            <Badge variant="secondary">{recipe.cuisine}</Badge>
-            {recipe.dietaryRestrictions.map(restriction => (
-              <Badge key={restriction} variant="outline">
-                {restriction}
-              </Badge>
-            ))}
+          <DialogDescription>
+            <div className="flex flex-wrap gap-2 pt-2">
+              <Badge variant="secondary">{recipe.cuisine}</Badge>
+              {recipe.dietaryRestrictions.map(restriction => (
+                <Badge key={restriction} variant="outline">
+                  {restriction}
+                </Badge>
+              ))}
+            </div>
           </DialogDescription>
         </DialogHeader>
         <div className="grid max-h-[50vh] gap-6 overflow-y-auto p-1 py-4">
