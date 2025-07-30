@@ -2,7 +2,7 @@
 
 Nourish Navigator is a modern, AI-powered meal planning application designed to simplify your weekly meal organization and grocery shopping. Built with Next.js and Genkit, it provides personalized recipe suggestions and helps you build a cohesive meal plan with ease.
 
-## ✨ Features
+## ✨ Featuress
 
 - **Weekly Meal Planner**: A visual calendar to plan your breakfast, lunch, and dinner for every day of the week.
 - **AI-Powered Recipe Suggestions**: Leveraging Genkit and Google's Gemini AI, get recipe ideas based on ingredients you already have and your personal taste profile.
