@@ -42,6 +42,7 @@ const SuggestRecipesOutputSchema = z.object({
       dietaryRestrictions: z
         .array(z.string())
         .describe('A list of dietary restrictions the recipe satisfies.'),
+      image: z.string().describe('A realistic food image URL from Unsplash that matches the recipe. Use format: https://images.unsplash.com/photo-[photo-id]?w=600&h=400&fit=crop&crop=center'),
     })
   ).describe('A list of recipes that match the user preferences.'),
 });
@@ -61,7 +62,16 @@ Dietary Preferences: {{{dietaryPreferences}}}
 Cuisine Preferences: {{{cuisinePreferences}}}
 Ingredients on Hand: {{{ingredientsOnHand}}}
 
-Suggest 3 recipes that match the user's preferences.`,
+Suggest 3 recipes that match the user's preferences. For each recipe, provide a realistic food image URL from Unsplash that shows the actual dish. Use this format for images: https://images.unsplash.com/photo-[photo-id]?w=600&h=400&fit=crop&crop=center
+
+Here are some example photo IDs for different types of food:
+- Pasta dishes: 1565299624946-3fb6ac7614dd, 1551183053-bf91a1d81141
+- Breakfast items: 1551218808-fbd922b8b42a, 1484723091739-30a097e8f929
+- Salads: 1512621776951-a57141f2eefd, 1540420773420-3366772f4999
+- Meat dishes: 1546833999-946b90aaaa2d, 1565299507177-4ee19f04e67f
+- Sandwiches: 1568901346375-23c9450c58cd, 1571091718767-18b5b1457add
+
+Choose appropriate photo IDs that match the type of dish you're suggesting.`,
 });
 
 const suggestRecipesFlow = ai.defineFlow(

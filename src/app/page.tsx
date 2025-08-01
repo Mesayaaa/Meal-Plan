@@ -1,34 +1,34 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import {Button} from '@/components/ui/button';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {useMealPlan} from '@/hooks/use-meal-plan.tsx';
-import type {Day, MealType, Recipe} from '@/lib/types';
-import {RecipeDetails} from '@/components/recipe-details';
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useMealPlan } from "@/hooks/use-meal-plan";
+import type { Day, MealType, Recipe } from "@/lib/types";
+import { RecipeDetails } from "@/components/recipe-details";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import {PlusCircle} from 'lucide-react';
-import SuggestionsPage from '@/app/suggestions/page';
+} from "@/components/ui/dialog";
+import { PlusCircle } from "lucide-react";
+import SuggestionsPage from "@/app/suggestions/page";
 
 const days: Day[] = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ];
-const mealTypes: MealType[] = ['Breakfast', 'Lunch', 'Dinner'];
+const mealTypes: MealType[] = ["Breakfast", "Lunch", "Dinner"];
 
 export default function MealCalendarPage() {
-  const {mealPlan, addMeal} = useMealPlan();
+  const { mealPlan, addMeal } = useMealPlan();
   const [selectedRecipe, setSelectedRecipe] = React.useState<Recipe | null>(
     null
   );
@@ -47,14 +47,14 @@ export default function MealCalendarPage() {
   };
 
   const openAddMealDialog = (day: Day, type: MealType) => {
-    setMealSlot({day, type});
+    setMealSlot({ day, type });
     setAddMealDialogOpen(true);
   };
 
   const closeAddMealDialog = () => {
     setAddMealDialogOpen(false);
     setMealSlot(null);
-  }
+  };
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
@@ -68,15 +68,16 @@ export default function MealCalendarPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {days.map(day => (
+        {days.map((day) => (
           <Card key={day} className="flex flex-col">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">{day}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col gap-4">
-              {mealTypes.map(type => {
+              {mealTypes.map((type) => {
                 const meal = mealPlan[day][type];
-                const isCurrentSlot = mealSlot?.day === day && mealSlot?.type === type;
+                const isCurrentSlot =
+                  mealSlot?.day === day && mealSlot?.type === type;
                 return (
                   <div key={type}>
                     <h4 className="font-semibold text-muted-foreground">
@@ -99,7 +100,9 @@ export default function MealCalendarPage() {
                       ) : (
                         <Dialog
                           open={addMealDialogOpen && isCurrentSlot}
-                          onOpenChange={(isOpen) => !isOpen && closeAddMealDialog()}
+                          onOpenChange={(isOpen) =>
+                            !isOpen && closeAddMealDialog()
+                          }
                         >
                           <DialogTrigger asChild>
                             <Button
@@ -111,16 +114,14 @@ export default function MealCalendarPage() {
                               Add Meal
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-4xl">
+                          <DialogContent className="max-w-4xl max-h-[90vh]">
                             <DialogHeader>
                               <DialogTitle className="font-headline">
                                 Find a recipe for {day} {type}
                               </DialogTitle>
                             </DialogHeader>
-                            <div className="max-h-[80vh] overflow-y-auto p-1">
-                              <SuggestionsPage
-                                onRecipeSelect={handleAddMeal}
-                              />
+                            <div className="max-h-[75vh] overflow-y-auto p-1 pb-4">
+                              <SuggestionsPage onRecipeSelect={handleAddMeal} />
                             </div>
                           </DialogContent>
                         </Dialog>

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import {useForm, type SubmitHandler} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {z} from 'zod';
+import * as React from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   suggestRecipes,
   type SuggestRecipesOutput,
-} from '@/ai/flows/suggest-recipes';
+} from "@/ai/flows/suggest-recipes";
 
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -18,16 +18,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {useToast} from '@/hooks/use-toast';
-import {RecipeCard} from '@/components/recipe-card';
-import {useUserPreferences} from '@/hooks/use-user-preferences';
-import {Loader2} from 'lucide-react';
-import type {Recipe} from '@/lib/types';
+} from "@/components/ui/form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { RecipeCard } from "@/components/recipe-card";
+import { useUserPreferences } from "@/hooks/use-user-preferences";
+import { Loader2 } from "lucide-react";
+import type { Recipe } from "@/lib/types";
 
 const formSchema = z.object({
-  ingredientsOnHand: z.string().min(1, 'Please list at least one ingredient.'),
+  ingredientsOnHand: z.string().min(1, "Please list at least one ingredient."),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -39,20 +39,21 @@ interface SuggestionsPageProps {
 export default function SuggestionsPage({
   onRecipeSelect,
 }: SuggestionsPageProps) {
-  const {toast} = useToast();
-  const {preferences} = useUserPreferences();
-  const [suggestedRecipes, setSuggestedRecipes] =
-    React.useState<SuggestRecipesOutput['recipes']>([]);
+  const { toast } = useToast();
+  const { preferences } = useUserPreferences();
+  const [suggestedRecipes, setSuggestedRecipes] = React.useState<
+    SuggestRecipesOutput["recipes"]
+  >([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ingredientsOnHand: '',
+      ingredientsOnHand: "",
     },
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async data => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     setSuggestedRecipes([]);
     try {
@@ -63,24 +64,24 @@ export default function SuggestionsPage({
       });
       setSuggestedRecipes(result.recipes);
     } catch (error) {
-      console.error('Failed to get suggestions:', error);
+      console.error("Failed to get suggestions:", error);
       toast({
-        variant: 'destructive',
-        title: 'Error',
+        variant: "destructive",
+        title: "Error",
         description:
-          'Could not fetch recipe suggestions. Please try again later.',
+          "Could not fetch recipe suggestions. Please try again later.",
       });
     }
     setIsLoading(false);
   };
 
-  const pageTitle = onRecipeSelect ? 'Find a Recipe' : 'Get Recipe Suggestions';
+  const pageTitle = onRecipeSelect ? "Find a Recipe" : "Get Recipe Suggestions";
   const pageDescription = onRecipeSelect
-    ? 'Find the perfect recipe to add to your meal plan.'
-    : 'Tell us what you have, and we\'ll find recipes for you.';
+    ? "Find the perfect recipe to add to your meal plan."
+    : "Tell us what you have, and we'll find recipes for you.";
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8 pb-8">
       {!onRecipeSelect && (
         <div className="mb-8 text-center">
           <h1 className="font-headline text-4xl font-bold tracking-tight md:text-5xl">
@@ -104,7 +105,7 @@ export default function SuggestionsPage({
               <FormField
                 control={form.control}
                 name="ingredientsOnHand"
-                render={({field}) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Ingredients You Have</FormLabel>
                     <FormControl>
@@ -124,7 +125,7 @@ export default function SuggestionsPage({
                     Getting suggestions...
                   </>
                 ) : (
-                  'Suggest Recipes'
+                  "Suggest Recipes"
                 )}
               </Button>
             </form>
@@ -133,11 +134,11 @@ export default function SuggestionsPage({
       </Card>
 
       {suggestedRecipes.length > 0 && (
-        <div className="mt-12">
+        <div className="mt-12 pb-8">
           <h2 className="font-headline mb-8 text-center text-3xl font-bold">
             Here's what we found...
           </h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr px-2 sm:px-0">
             {suggestedRecipes.map((recipe, index) => (
               <RecipeCard
                 key={index}
